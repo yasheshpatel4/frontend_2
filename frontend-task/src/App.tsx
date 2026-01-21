@@ -22,30 +22,18 @@ function App(){
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("myData");
-
-    if (saved) {
-      setProducts(JSON.parse(saved));
-      setLoading(false);
-    } else {
-      fetchProducts();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (products.length > 0) {
-      localStorage.setItem("myData", JSON.stringify(products));
-    }
-  }, [products]);
-
-  const fetchProducts = async () => {
+  const fetchProducts = async (query?: string) => {
     try {
-      const res = await fetch("https://dummyjson.com/products");
+      setLoading(true);
+      const url = query
+        ? `https://dummyjson.com/products/search?q=${query}`
+        : `https://dummyjson.com/products`;
+
+      const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
       const data = await res.json();
 
-      const mappedProducts: Product[] = data.products.map((p: any) => ({
+      const mapped: Product[] = data.products.map((p: any) => ({
         id: p.id,
         name: p.title,
         price: p.price,
@@ -53,13 +41,21 @@ function App(){
         stock: p.stock,
       }));
 
-      setProducts(mappedProducts);
+      setProducts(mapped);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+      fetchProducts(search.trim() || undefined);
+  }, [search]);
 
 
   // const addProduct = (product:Product)=>{
