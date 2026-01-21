@@ -7,7 +7,6 @@ interface CartPageProps {
   onRemove: (id: number) => void;
   onClear: () => void;
   onCheckout: () => void;
-  onBack: () => void;
   totalPrice: number;
 }
 
@@ -18,16 +17,12 @@ const CartPage = ({
   onRemove,
   onClear,
   onCheckout,
-  onBack,
   totalPrice,
 }: CartPageProps) => {
-  if (cart.length === 0) {
+  if (cart.length == 0) {
     return (
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-4">Your Cart is Empty</h2>
-        <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onBack}>
-          Back to Shopping
-        </button>
       </div>
     );
   }
@@ -79,9 +74,6 @@ const CartPage = ({
           </button>
           <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={onCheckout}>
             Checkout
-          </button>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={onBack}>
-            Continue Shopping
           </button>
         </div>
       </div>

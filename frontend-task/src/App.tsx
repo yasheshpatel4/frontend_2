@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import ProductCard from "./components/ProductCard";
-import ProductForm from "./components/ProductForm";
+// import ProductForm from "./components/ProductForm";
 import Navbar from "./components/Navbar";
 import StatTiles from "./components/StatTiles";
 import CartPage from "./components/CartPage";
@@ -155,8 +155,7 @@ function App(){
         onUpdateQuantity={updateCartQuantity}
         onRemove={removeFromCart}
         onClear={clearCart}
-        onCheckout={() => alert("Checkout functionality would go here")}
-        onBack={() => {}}
+        onCheckout={()=>alert("Checkout functionality would go here")}
         totalPrice={getTotalPrice()}
       />
 
@@ -164,6 +163,5 @@ function App(){
     </div>
   );
 }
-
 
 export default App;
