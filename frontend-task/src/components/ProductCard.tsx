@@ -7,6 +7,7 @@ type ProductCardProps = {
   category: string;
   stock: number;
   deleteProduct: (id: number) => void;
+  addToCart: (id: number) => void;
 };
 const mode=localStorage.getItem("theme");
 const ProductCard = ({
@@ -17,6 +18,7 @@ const ProductCard = ({
   category,
   stock,
   deleteProduct,
+  addToCart,
 }: ProductCardProps) => {
   return (
 
@@ -37,7 +39,7 @@ const ProductCard = ({
       <button onClick={() => deleteProduct(id)} className="border-2 p-2 text-red-500 mt-2">
       Delete
       </button>
-      <button className="border-2 p-2 ml-2 text-500 mt-2">
+      <button onClick={()=>addToCart(id)} className="border-2 p-2 ml-2 text-500 mt-2">
       Add to cart
       </button>
       

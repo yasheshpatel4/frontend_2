@@ -3,6 +3,7 @@ import ProductCard from "./components/ProductCard";
 import ProductForm from "./components/ProductForm";
 import Navbar from "./components/Navbar";
 import StatTiles from "./components/StatTiles";
+import CartPage from "./components/CartPage";
 
 export interface Product {
   id: number;
@@ -10,6 +11,11 @@ export interface Product {
   price: number;
   category: string;
   stock: number;
+};
+
+export interface CartItem {
+  id: number;
+  quantity: number;
 };
 
 function App(){
@@ -22,6 +28,52 @@ function App(){
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  const [cart, setCart] = useState<CartItem[]>(JSON.parse(localStorage.getItem("cart") || "[]"));
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  const addToCart = (id: number) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === id);
+      if (existing) {
+        return prev.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      } else {
+        return [...prev, { id, quantity: 1 }];
+      }
+    });
+  };
+
+  const updateCartQuantity = (id: number, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(id);
+    } else {
+      setCart((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, quantity } : item
+        )
+      );
+    }
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCart([]);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => {
+      const product = products.find((p) => p.id === item.id);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0);
   };
 
   // const [products, setProducts] = useState<Product[]>([
@@ -78,10 +130,11 @@ function App(){
   };
 
   const filteredProducts = products.filter((p)=>p.name.toLowerCase().includes(search.toLowerCase()));
+
   return(
     <div className="p-4">
       <Navbar theme={theme} toggleTheme={toggleTheme} />
-      
+
       <input
         type="text"
         placeholder="Search product..."
@@ -93,8 +146,19 @@ function App(){
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
         {filteredProducts.map((product)=>(
-          <ProductCard theme={theme} key={product.id} {...product} deleteProduct={deleteProduct} /> ))}
+          <ProductCard theme={theme} key={product.id} {...product}  deleteProduct={deleteProduct} addToCart={addToCart} /> ))}
       </div>
+
+      <CartPage
+        cart={cart}
+        products={products}
+        onUpdateQuantity={updateCartQuantity}
+        onRemove={removeFromCart}
+        onClear={clearCart}
+        onCheckout={() => alert("Checkout functionality would go here")}
+        onBack={() => {}}
+        totalPrice={getTotalPrice()}
+      />
 
       <StatTiles products={products}/>
     </div>
