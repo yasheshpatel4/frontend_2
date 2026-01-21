@@ -13,6 +13,17 @@ export interface Product {
 };
 
 function App(){
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   // const [products, setProducts] = useState<Product[]>([
   //   { id: 1, name: "Laptop", price: 800, category: "A" ,stock:10},
   //   { id: 2, name: "Charger", price: 120, category: "B",stock:2},
@@ -69,7 +80,7 @@ function App(){
   const filteredProducts = products.filter((p)=>p.name.toLowerCase().includes(search.toLowerCase()));
   return(
     <div className="p-4">
-      <Navbar/>
+      <Navbar theme={theme} toggleTheme={toggleTheme} />
       
       <input
         type="text"
@@ -82,9 +93,9 @@ function App(){
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
         {filteredProducts.map((product)=>(
-          <ProductCard key={product.id} {...product} deleteProduct={deleteProduct}/> ))}
-
+          <ProductCard theme={theme} key={product.id} {...product} deleteProduct={deleteProduct} /> ))}
       </div>
+
       <StatTiles products={products}/>
     </div>
   );

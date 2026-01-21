@@ -1,5 +1,6 @@
 import { useState,useEffect,useContext } from "react";
 type ProductCardProps = {
+  theme: string
   id: number;
   name: string;
   price: number;
@@ -9,6 +10,7 @@ type ProductCardProps = {
 };
 const mode=localStorage.getItem("theme");
 const ProductCard = ({
+  theme,
   id,
   name,
   price,
@@ -22,7 +24,7 @@ const ProductCard = ({
       <h2 className="font-semibold">{name}</h2>
       <h2
   className={`text-lg font-bold ${
-    mode == "light"
+    theme == "light"
       ? 'text-red-600 dark:text-red-400'
       : 'text-gray-900 dark:text-yellow-300'
   }`}>
