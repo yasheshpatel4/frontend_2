@@ -17,32 +17,54 @@ function App(){
   //   { id: 1, name: "Laptop", price: 800, category: "A" ,stock:10},
   //   { id: 2, name: "Charger", price: 120, category: "B",stock:2},
   //   { id: 3, name: "Table", price: 300, category: "C",stock:0 }]);
-    
-    const defaultProduct: Product[] = [{ id: 1, name: "Laptop", price: 800, category: "A", stock: 10 },
-                                       { id: 2, name: "Charger", price: 120, category: "B",stock:2},
-                                       { id: 3, name: "Table", price: 300, category: "C",stock:0 }];
-    const [products, setProducts] = useState<Product[]>(()=>{
-      const saved = localStorage.getItem("myData");
-      if(saved){
-        return JSON.parse(saved);
-      }
-      else{
-        localStorage.setItem("myData",JSON.stringify(defaultProduct));
-        return defaultProduct;
-      }
-    });
-
-
-  const [search, setSearch] = useState<string>("");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("myData", JSON.stringify(products));
-}, [products]);
+    const saved = localStorage.getItem("myData");
 
+    if (saved) {
+      setProducts(JSON.parse(saved));
+      setLoading(false);
+    } else {
+      fetchProducts();
+    }
+  }, []);
 
-  const addProduct = (product:Product)=>{
-    setProducts([...products, product]);
+  useEffect(() => {
+    if (products.length > 0) {
+      localStorage.setItem("myData", JSON.stringify(products));
+    }
+  }, [products]);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("https://dummyjson.com/products");
+      if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+      const data = await res.json();
+
+      const mappedProducts: Product[] = data.products.map((p: any) => ({
+        id: p.id,
+        name: p.title,
+        price: p.price,
+        category: p.category,
+        stock: p.stock,
+      }));
+
+      setProducts(mappedProducts);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error");
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  // const addProduct = (product:Product)=>{
+  //   setProducts([...products, product]);
+  // };
 
   const deleteProduct = (id:number)=>{
     setProducts(products.filter((p)=>p.id!=id));
@@ -60,7 +82,7 @@ function App(){
         value={search}
         onChange={(e)=>setSearch(e.target.value)}/>
 
-      <ProductForm addProduct={addProduct}/>
+      {/* <ProductForm addProduct={addProduct}/> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6">
         {filteredProducts.map((product)=>(
