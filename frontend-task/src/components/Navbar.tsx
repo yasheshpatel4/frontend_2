@@ -1,4 +1,5 @@
 import { useState,useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
 
 interface NavbarProps {
   theme: string;
@@ -16,11 +17,11 @@ const Navbar = ({ theme, toggleTheme }:NavbarProps) => {
         <li className="cursor-pointer hover:text-slate-300">Product</li>
         <li className="cursor-pointer hover:text-slate-300">Inventory</li>
       </ul>
+      
       <button
         onClick={toggleTheme}
         className={`px-4 py-2 rounded font-semibold transition-colors duration-300 
-          ${theme == "light" ? "bg-blue-500 text-white" : "bg-yellow-400 text-gray-900"}`}
-      >
+          ${theme == "light" ? "bg-blue-500 text-white" : "bg-yellow-400 text-gray-900"}`}>
         {theme == "light" ? "Dark Mode" : "Light Mode"}
       </button>
     </nav>

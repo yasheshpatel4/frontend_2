@@ -28,11 +28,11 @@ const CartPage = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Shopping Cart</h2>
+    <div className="max-w-4xl mx-auto border-2 m-10">
+      <h2 className="m-4 text-xl font-bold mb-4">Shopping Cart</h2>
       <div className="space-y-4">
         {cart.map((item) => {
-          const product = products.find((p) => p.id === item.id);
+          const product = products.find((p) => p.id == item.id);
           if (!product) return null;
           return (
             <div key={item.id} className="border p-4 rounded flex justify-between items-center">
@@ -67,12 +67,12 @@ const CartPage = ({
         })}
       </div>
       <div className="mt-6 text-right">
-        <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+        <p className="mr-4 text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
         <div className="mt-4 space-x-2">
-          <button className="bg-gray-500 text-white px-4 py-2 rounded" onClick={onClear}>
+          <button className="mb-4 bg-gray-500 text-white px-4 py-2 rounded" onClick={onClear}>
             Clear Cart
           </button>
-          <button className="bg-green-500 text-white px-4 py-2 rounded" onClick={onCheckout}>
+          <button className="mb-4 mr-4 bg-green-500 text-white px-4 py-2 rounded" onClick={onCheckout}>
             Checkout
           </button>
         </div>

@@ -1,9 +1,25 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,createContext,useContext } from "react";
 import ProductCard from "./components/ProductCard";
 // import ProductForm from "./components/ProductForm";
 import Navbar from "./components/Navbar";
 import StatTiles from "./components/StatTiles";
 import CartPage from "./components/CartPage";
+import Demo from "./components/demo";
+// interface ThemeContexttype{
+//   theme:string;
+//   setTheme:(theme:string)=>void;
+// }
+
+// const ThemeContext=createContext<ThemeContexttype>;
+
+// const useTheme = (): ThemeContextType => {
+//   const context = useContext(ThemeContext);
+//   if (!context) {
+//     throw new Error("useTheme must be used within ThemeContext.Provider");
+//   }
+//   return context;
+// };
+
 
 export interface Product {
   id: number;
@@ -19,6 +35,7 @@ export interface CartItem {
 };
 
 function App(){
+  
 
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   
@@ -107,7 +124,7 @@ function App(){
       setProducts(mapped);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
+    } finally{
       setLoading(false);
     }
   };
@@ -132,8 +149,13 @@ function App(){
   const filteredProducts = products.filter((p)=>p.name.toLowerCase().includes(search.toLowerCase()));
 
   return(
+    // <themecontext.Provider value={{ theme, setTheme }}>
+
+    // </themetcontext.Provider>
     <div className="p-4">
+      
       <Navbar theme={theme} toggleTheme={toggleTheme} />
+      {/* <Demo/>   */}
 
       <input
         type="text"
@@ -155,7 +177,7 @@ function App(){
         onUpdateQuantity={updateCartQuantity}
         onRemove={removeFromCart}
         onClear={clearCart}
-        onCheckout={()=>alert("Checkout functionality would go here")}
+        onCheckout={()=>alert("Checkout functionality is remaining to implemnet")}
         totalPrice={getTotalPrice()}
       />
 
